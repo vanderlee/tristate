@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+ <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>jQuery Tristate</title>
+
+		<!-- jQuery/jQueryUI (hosted) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>
+
+		<!-- Tristate -->
+		<script src="jquery.tristate.js"></script>
+
+		<style>
+			body {
+				font-family: "Segoe UI", Verdana, Helvetica, Arial, sans-serif;
+				font-size: 11px;
+			}
+		</style>
+
+		<script>
+			$(function() {
+				$('#tristate').tristate({
+					trueValue: '1',
+					falseValue: '0',
+					indeterminateValue: 'inherit'
+				}).click(function() {
+					console.log('Tri:', $(this).val(), $(this).is(':indeterminate'), $(this).is(':determinate'));
+				});
+				$('#setIndeterminate').click(function() {
+					$('#tristate').tristate('state', null);
+				});
+
+				$('#duostate').click(function() {
+					console.log('Duo:', $(this).val());
+				});
+
+				$('.defaults').tristate();
+			});
+		</script>
+    </head>
+    <body>
+		<h1>jQuery Tristate</h1>
+		Basic tri-state checkbox using pure HTML/CSS/DOM.
+		Should support MSIE6+ and all other browsers (though not all tested currently).
+
+		<h2>Features</h2>
+		<ul>
+			<li>.tristate()</li>
+			<li>Options to set alternative values for true, false and null state.</li>
+			<li>Access using val() (when alternative values specified).</li>
+			<li>Set state using widget-like syntax .tristate('state', true/false/null);</li>
+			<li>:indeterminate and :determinate pseudo selectors included.</li>
+		</ul>
+
+		<h2>Examples</h2>
+		<div><label for="duostate">Normal input: <input id="duostate" type="checkbox" value="1"/></label></div>
+
+		<div><label for="tristate">Basic tristate: <input id="tristate" type="checkbox" value="1"/></label></div>
+		<button id="setIndeterminate">set indeterminate</button>
+
+		<div>Defaults:
+			<input class="defaults" type="checkbox" value="1"/>
+			<input class="defaults" type="checkbox" checked="checked" value="1"/>
+			<input class="defaults" type="checkbox" indeterminate="indeterminate" value="1"/>
+		</div>
+	</body>
+</html>
