@@ -17,17 +17,20 @@
  */
 
 ;(function($){
+	'use strict';
+
     var pluginName	= 'vanderlee.tristate',
 		tristates	= [],
-		widget = function(element) {
+		originalVal = $.fn.val,
+		widget		= function(element) {
 			return {
 				element: $(element),
 
 				options: {
-					state:			undefined,
-					trueValue:		undefined,
-					falseValue:		undefined,
-					nullValue:		undefined
+					state:					null,
+					checked:				undefined,
+					unchecked:				undefined,
+					indeterminate:		undefined
 				},
 
 				_setOptions: function(options) {
@@ -35,7 +38,7 @@
 				},
 
 				_create: function() {
-					var that		= this;
+					var that = this;
 
 					that.element.change(function(e) {
 						switch (that.options.state) {
@@ -46,7 +49,11 @@
 						that._refresh();
 					});
 
-					that.options.state = that.element.attr('indeterminate') !== undefined? null : that.element.is(':checked');
+					that.options.checked		= that.element.attr('checkedvalue')	|| that.options.checked;
+					that.options.unchecked		= that.element.attr('uncheckedvalue') || that.options.unchecked;
+					that.options.indeterminate	= that.element.attr('indeterminatevalue') || that.options.indeterminate;
+
+					that.options.state = typeof that.element.attr('indeterminate') !== 'undefined'? null : that.element.is(':checked');
 					that._refresh();
 
 					return this;
@@ -54,8 +61,16 @@
 
 				_refresh: function() {
 					this.element.data(pluginName, this.value());
-					this.element.prop('indeterminate', this.options.state === null);
-					this.element.prop('checked', this.options.state);
+					
+					if (this.options.state === null) {
+						this.element.attr('indeterminate', 'indeterminate');
+						this.element.prop('indeterminate', true);
+					} else {
+						this.element.removeAttr('indeterminate');
+						this.element.prop('indeterminate', false);
+					}
+					
+					this.element.attr('checked', this.options.state);
 				},
 
 				state: function(value) {
@@ -69,14 +84,13 @@
 				},
 
 				value: function() {
-					//@todo support SET by value
-					var value = undefined;
+					var value;
 					switch (this.options.state) {
-						case true:	value = this.options.trueValue;				break;
-						case false: value = this.options.falseValue;			break;
-						case null:	value = this.options.indeterminateValue;	break;
+						case true:	value = this.options.checked;				break;
+						case false: value = this.options.unchecked;			break;
+						case null:	value = this.options.indeterminate;	break;
 					}
-					return typeof value === 'undefined'? this.element.val() : value;
+					return typeof value === 'undefined'? this.element.attr('value') : value;
 				}
 			};
 		};
@@ -84,13 +98,13 @@
     $.fn.tristate = function(operation, value) {
         return this.each(function() {
 			var that		= this,
-				tristate	= undefined,
-				result		= undefined;
+				tristate,
+				result;
 
             if (typeof operation === 'undefined' || $.isPlainObject(operation)) {
 				tristate = widget(this);
-				tristate._create.apply(tristate);
 				tristate._setOptions(operation);
+				tristate._create.apply(tristate);
 				tristates.push(tristate);
 				result = tristate;
             } else {
@@ -106,30 +120,33 @@
     };
 
 	// Overwrite fn.val
-    var originalVal = $.fn.val;
     $.fn.val = function(value) {
-        var data = $(this).data(pluginName);
-        if (typeof value === 'undefined') {
-            if (typeof data !== 'undefined') {
-                return data;
-            }
-            return originalVal.call(this);
-        }
-        else {
-            if (typeof data !== 'undefined') {
-                  $(this).data(pluginName, value);
-            }
+        var data = this.data(pluginName);
+        if (typeof data === 'undefined') {
             return originalVal.call(this, value);
-        }
+		} else {
+	        if (typeof value === 'undefined') {
+				return data;
+			} else {
+				this.data(pluginName, value);
+				return this;
+			}
+		}
     };
 
 	// :indeterminate pseudo selector
     $.expr.filters.indeterminate = function(element) {
-      return $(element).data(pluginName) === null;
+		var $element = $(element);
+		return typeof $element.data(pluginName) !== 'undefined' && $element.prop('indeterminate');
     };
 
 	// :determinate pseudo selector
     $.expr.filters.determinate = function(element) {
-      return $(element).data(pluginName) !== null;
+		return !($.expr.filters.indeterminate(element));
     };
-})(jQuery);
+
+	// :tristate selector
+    $.expr.filters.tristate = function(element) {
+		return $(element).hasData(pluginName);
+    };
+}(jQuery));

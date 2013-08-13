@@ -4,65 +4,153 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>jQuery Tristate</title>
 
+		<style>
+			body {
+				font-family:		"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
+				font-size:			11px;
+				padding:			4em 8em 4em 4em;
+
+				-webkit-columns:		480px;
+				   -moz-columns:		480px;
+						columns:		480px;
+
+				-webkit-column-gap:		4em;
+				   -moz-column-gap:		4em;
+						column-gap:		4em;
+
+				-webkit-column-rule:	thin solid silver;
+				   -moz-column-rule:	thin solid silver;
+						column-rule:	thin solid silver;
+			}
+
+			#footer {
+				margin-top:				4em;
+				-webkit-column-span:	all; /* Safari and Chrome */
+						column-span:	all;
+			}
+
+			h1 {
+				margin-top:	0;
+				-webkit-column-span:	all; /* Safari and Chrome */
+						column-span:	all;
+			}
+
+			hr {
+				border-top:		double;
+				margin:			2em 25%;
+			}
+
+			.output {
+				font-family:	monospace;
+				border:			solid thin silver;
+			}
+		</style>
+
 		<!-- jQuery/jQueryUI (hosted) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>
 
-		<!-- Tristate -->
-		<script src="jquery.tristate.js"></script>
-
-		<style>
-			body {
-				font-family: "Segoe UI", Verdana, Helvetica, Arial, sans-serif;
-				font-size: 11px;
-			}
-		</style>
-
+		<!-- README.md inclusion -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
 		<script>
 			$(function() {
-				$('#tristate').tristate({
-					trueValue: '1',
-					falseValue: '0',
-					indeterminateValue: 'inherit'
-				}).click(function() {
-					console.log('Tri:', $(this).val(), $(this).is(':indeterminate'), $(this).is(':determinate'));
+				var markdown = new Markdown.Converter();
+				$.get('README.md', function(readme) {
+					$('#readme').html(markdown.makeHtml(readme));
 				});
-				$('#setIndeterminate').click(function() {
-					$('#tristate').tristate('state', null);
-				});
-
-				$('#duostate').click(function() {
-					console.log('Duo:', $(this).val());
-				});
-
-				$('.defaults').tristate();
 			});
 		</script>
+
+		<!-- Tristate -->
+		<script src="jquery.tristate.js"></script>
     </head>
     <body>
-		<h1>jQuery Tristate</h1>
-		Basic tri-state checkbox using pure HTML/CSS/DOM.
-		Should support MSIE6+ and all other browsers (though not all tested currently).
+		<a href="https://github.com/vanderlee/tristate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
-		<h2>Features</h2>
-		<ul>
-			<li>.tristate()</li>
-			<li>Options to set alternative values for true, false and null state.</li>
-			<li>Access using val() (when alternative values specified).</li>
-			<li>Set state using widget-like syntax .tristate('state', true/false/null);</li>
-			<li>:indeterminate and :determinate pseudo selectors included.</li>
-		</ul>
+		<div id="readme" class="chapter"></div>
 
-		<h2>Examples</h2>
-		<div><label for="duostate">Normal input: <input id="duostate" type="checkbox" value="1"/></label></div>
+		<hr/>
 
-		<div><label for="tristate">Basic tristate: <input id="tristate" type="checkbox" value="1"/></label></div>
-		<button id="setIndeterminate">set indeterminate</button>
+		<div id="examples" class="chapter">
+			<h2>Examples</h2>
 
-		<div>Defaults:
-			<input class="defaults" type="checkbox" value="1"/>
-			<input class="defaults" type="checkbox" checked="checked" value="1"/>
-			<input class="defaults" type="checkbox" indeterminate="indeterminate" value="1"/>
+			<h3>Quick start (look in console)</h3>
+			<input type="checkbox" class="tristate" value="1"/>
+			<input type="checkbox" class="tristate" value="1" checked="checked"/>
+			<input type="checkbox" class="tristate" value="1" indeterminate="indeterminate"/>
+			<script>
+				$(function() {
+					$('.tristate').tristate();
+
+					$('.tristate').click(function() {
+						console.log('Input:', this);
+						console.log('Is indeterminate?', $(this).is(':indeterminate'));
+						console.log('Is determinate?', $(this).is(':determinate'));
+						console.log('Is checked?', $(this).is(':checked'));
+					});
+				});
+			</script>
+
+			<h3>Alternative values; "Good", "Maybe", "Bad"</h3>
+			<div><input id="tristate" type="checkbox"/></div>
+			<div>Current value returned by <code>$.val()</code>: <span id="tristate-value" class="output"></span></div>
+			<script>
+				$(function() {
+					var $tristate = $('#tristate').tristate({
+						checked:			"Good",
+						unchecked:			"Bad",
+						indeterminate:		"Maybe"
+					});
+
+					function showValue() {
+						$('#tristate-value').text($tristate.val());
+					}
+					$tristate.click(showValue);
+					showValue();
+				});
+			</script>
+
+			<h3>Set state by method calls</h3>
+			<div><input id="set-by-method" type="checkbox"/></div>
+			<div>
+				<button id="setChecked">set checked</button>
+				<button id="setUnchecked">set unchecked</button>
+				<button id="setIndeterminate">set indeterminate</button>
+			</div>
+			<script>
+				$(function() {
+					var $tristate = $('#set-by-method').tristate();
+
+					$('#setIndeterminate').click(function() {
+						$tristate.tristate('state', null);
+					});
+					$('#setChecked').click(function() {
+						$tristate.tristate('state', true);
+					});
+					$('#setUnchecked').click(function() {
+						$tristate.tristate('state', false);
+					});
+				});
+			</script>
+
+			<h3>HTML expando attributes for values (1/0/?)</h3>
+			<div><input type="checkbox" id="expando" value="" checkedvalue="1" uncheckedvalue="0" indeterminatevalue="?"/></div>
+			<div>Current value returned by <code>$.val()</code>: <span id="expando-value" class="output"></span></div>
+			<script>
+				$(function() {
+					var $tristate = $('#expando').tristate();
+
+					function showValue() {
+						$('#expando-value').text($tristate.val());
+					}
+					$tristate.click(showValue);
+					showValue();
+				});
+			</script>
+		</div>
+		
+		<div id="footer" class="chapter">
+			Copyright &copy; 2013 Martijn W. van der Lee. MIT Open Source license applies.
 		</div>
 	</body>
 </html>
