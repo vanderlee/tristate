@@ -1,6 +1,6 @@
 jQuery Tristate
 ===============
-Version 0
+Version v0.1
 
 jQuery tristate (indeterminate) checkbox with pseudo selectors and optional
 value modification and .val() overwrite.
@@ -21,22 +21,28 @@ Features
 
 Download
 --------
+jQuery v1.6.2 or higher required. (Will not work with v1.6.1 or before).
+
 Current version: https://github.com/vanderlee/tristate/archive/master.zip
+
+Sourcecode on Github: https://github.com/vanderlee/tristate
 
 Quick start
 -----------
 	<input type="checkbox" class="tristate"/>
 	<input type="checkbox" class="tristate" checked="checked"/>
-	<input type="checkbox" class="tristate" indeterminate="indeterminate"/>
+	<input type="checkbox" class="tristate" indeterminate="1"/>
 
 	<script>
 		$(function() {
-			$('.tristate').tristate();
-
-			$('.tristate').click(function() {
-				console.log('Is determinate?', $(this).is(':determinate'));
-				console.log('Is indeterminate?', $(this).is(':indeterminate'));
-				console.log('Is checked?', $(this).is(':checked'));
+			$('.tristate').tristate({
+				change: function(state, value) {
+					console.log('Input:', this);
+					console.log('Unknown?', state === null);
+					console.log('Known?', state !== null);
+					console.log('Checked?', state === true);
+					console.log('Unhecked?', state === false);
+				}
 			});
 		});
 	</script>
@@ -50,22 +56,37 @@ Documentation/API
 
 > -	`state`
 
->	`true` for checked, `false` for unchecked or `null` for undeterminate.
+> >	`true` for checked, `false` for unchecked or `null` for undeterminate.
 
 > -	`checked`
 
->	The value to return for checked state. If not specified, the value in the
+> >	The value to return for checked state. If not specified, the value in the
 	`value` attribute is returned.
 
 > -	`unchecked`
 
->	The value to return for unchecked state. If not specified, the value in the
+> >	The value to return for unchecked state. If not specified, the value in the
 	`value` attribute is returned.
 
 > -	`indeterminate`
 
->	The value to return for indeterminate state. If not specified, the value in
+> >	The value to return for indeterminate state. If not specified, the value in
 	the	`value` attribute is returned.
+
+
+>	**Events**
+
+> -	`init(state, value)`
+
+> > Triggered upon initialization.
+	State can be `true`, `false` or `null`. Value is the value as it would be
+	returned from `.val()`.
+
+> -	`change(state, value)`
+
+> > Triggered whenever the state changes.
+	State can be `true`, `false` or `null`. Value is the value as it would be
+	returned from `.val()`.
 
 ###	`.val()`
 >	By default, returns the value as if it were a plain checkbox; the state is

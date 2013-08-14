@@ -2,17 +2,19 @@
 <html>
  <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>jQuery Tristate</title>
+        <title>jQuery.Tristate</title>
 
 		<style>
 			body {
 				font-family:		"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
 				font-size:			11px;
-				padding:			4em 8em 4em 4em;
+				padding:			4em 8em 1em 4em;
+			}
 
-				-webkit-columns:		480px;
-				   -moz-columns:		480px;
-						columns:		480px;
+			.chapter {
+				-webkit-columns:		460px;
+				   -moz-columns:		460px;
+						columns:		460px;
 
 				-webkit-column-gap:		4em;
 				   -moz-column-gap:		4em;
@@ -21,18 +23,20 @@
 				-webkit-column-rule:	thin solid silver;
 				   -moz-column-rule:	thin solid silver;
 						column-rule:	thin solid silver;
+
+				text-align:				justify;
 			}
 
-			#footer {
-				margin-top:				4em;
-				-webkit-column-span:	all; /* Safari and Chrome */
-						column-span:	all;
+			h1,
+			h2 {
+				margin:					0;
+				margin-bottom:			.5em;
+				background:				black;
+				color:					white;
+				padding:				.2em .4em;
 			}
-
-			h1 {
-				margin-top:	0;
-				-webkit-column-span:	all; /* Safari and Chrome */
-						column-span:	all;
+			h2 {
+				margin-top:				1em;
 			}
 
 			hr {
@@ -40,15 +44,24 @@
 				margin:			2em 25%;
 			}
 
+			#footer {
+				margin-top:		4em;
+				text-align:		center;
+				color:			silver;
+				border-top:		thin solid silver;
+				padding-top:	1em;
+			}
+			
 			.output {
 				font-family:	monospace;
 				border:			solid thin silver;
+				padding:		.1em .2em;
 			}
 		</style>
 
 		<!-- jQuery/jQueryUI (hosted) -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>-->
 
 		<!-- README.md inclusion -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
@@ -67,89 +80,95 @@
     <body>
 		<a href="https://github.com/vanderlee/tristate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
-		<div id="readme" class="chapter"></div>
+		<div class="chapter">
+			<div id="readme" class="chapter"></div>
 
-		<hr/>
+			<hr/>
 
-		<div id="examples" class="chapter">
-			<h2>Examples</h2>
+			<div id="examples" class="chapter">
+				<h1>Examples</h1>
+				Try it yourself&hellip;
 
-			<h3>Quick start (look in console)</h3>
-			<input type="checkbox" class="tristate" value="1"/>
-			<input type="checkbox" class="tristate" value="1" checked="checked"/>
-			<input type="checkbox" class="tristate" value="1" indeterminate="indeterminate"/>
-			<script>
-				$(function() {
-					$('.tristate').tristate();
-
-					$('.tristate').click(function() {
-						console.log('Input:', this);
-						console.log('Is indeterminate?', $(this).is(':indeterminate'));
-						console.log('Is determinate?', $(this).is(':determinate'));
-						console.log('Is checked?', $(this).is(':checked'));
+				<h2>Quick start (look in console)</h2>
+				<input type="checkbox" class="tristate" value="1"/>
+				<input type="checkbox" class="tristate" value="1" checked="checked"/>
+				<input type="checkbox" class="tristate" value="1" indeterminate="1"/>
+				<script>
+					$(function() {
+						$('.tristate').tristate({
+							change: function(state, value) {
+								console.log('Input:', this);
+								console.log('Unknown?', state === null);
+								console.log('Known?', state !== null);
+								console.log('Checked?', state === true);
+								console.log('Unhecked?', state === false);
+							}
+						});
 					});
-				});
-			</script>
+				</script>
 
-			<h3>Alternative values; "Good", "Maybe", "Bad"</h3>
-			<div><input id="tristate" type="checkbox"/></div>
-			<div>Current value returned by <code>$.val()</code>: <span id="tristate-value" class="output"></span></div>
-			<script>
-				$(function() {
-					var $tristate = $('#tristate').tristate({
-						checked:			"Good",
-						unchecked:			"Bad",
-						indeterminate:		"Maybe"
+				<h2>Alternative values; "Good", "Maybe", "Bad"</h2>
+				<div><input id="tristate" type="checkbox"/></div>
+				<div>Current value returned by <code>$.val()</code>: <span id="tristate-value" class="output"></span></div>
+				<script>
+					$(function() {
+						function output(state, value) {
+							$('#tristate-value').text(value);
+						}
+						var $tristate = $('#tristate').tristate({
+							checked:			"Good",
+							unchecked:			"Bad",
+							indeterminate:		"Maybe",
+
+							init:				output,
+							change:				output
+						});
+
 					});
+				</script>
 
-					function showValue() {
-						$('#tristate-value').text($tristate.val());
-					}
-					$tristate.click(showValue);
-					showValue();
-				});
-			</script>
+				<h2>Set state by method calls</h2>
+				<div><input id="set-by-method" type="checkbox"/></div>
+				<div>
+					<button id="setChecked">set checked</button>
+					<button id="setUnchecked">set unchecked</button>
+					<button id="setIndeterminate">set indeterminate</button>
+				</div>
+				<script>
+					$(function() {
+						var $tristate = $('#set-by-method').tristate();
 
-			<h3>Set state by method calls</h3>
-			<div><input id="set-by-method" type="checkbox"/></div>
-			<div>
-				<button id="setChecked">set checked</button>
-				<button id="setUnchecked">set unchecked</button>
-				<button id="setIndeterminate">set indeterminate</button>
+						$('#setIndeterminate').click(function() {
+							$tristate.tristate('state', null);
+						});
+						$('#setChecked').click(function() {
+							$tristate.tristate('state', true);
+						});
+						$('#setUnchecked').click(function() {
+							$tristate.tristate('state', false);
+						});
+					});
+				</script>
+
+				<h2>HTML expando attributes for values (1/0/?)</h2>
+				<div><input type="checkbox" id="expando" value="" checkedvalue="1" uncheckedvalue="0" indeterminatevalue="?"/></div>
+				<div>Current value returned by <code>$.val()</code>: <span id="expando-value" class="output"></span></div>
+				<script>
+					$(function() {
+						function output(state, value) {
+							$('#expando-value').text(value);
+						}
+
+						$('#expando').tristate({
+							init:	output,
+							change:	output
+						});
+					});
+				</script>
 			</div>
-			<script>
-				$(function() {
-					var $tristate = $('#set-by-method').tristate();
-
-					$('#setIndeterminate').click(function() {
-						$tristate.tristate('state', null);
-					});
-					$('#setChecked').click(function() {
-						$tristate.tristate('state', true);
-					});
-					$('#setUnchecked').click(function() {
-						$tristate.tristate('state', false);
-					});
-				});
-			</script>
-
-			<h3>HTML expando attributes for values (1/0/?)</h3>
-			<div><input type="checkbox" id="expando" value="" checkedvalue="1" uncheckedvalue="0" indeterminatevalue="?"/></div>
-			<div>Current value returned by <code>$.val()</code>: <span id="expando-value" class="output"></span></div>
-			<script>
-				$(function() {
-					var $tristate = $('#expando').tristate();
-
-					function showValue() {
-						$('#expando-value').text($tristate.val());
-					}
-					$tristate.click(showValue);
-					showValue();
-				});
-			</script>
 		</div>
 		
-		<div id="footer" class="chapter">
+		<div id="footer">
 			Copyright &copy; 2013 Martijn W. van der Lee. MIT Open Source license applies.
 		</div>
 	</body>

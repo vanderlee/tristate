@@ -27,10 +27,13 @@
 				element: $(element),
 
 				options: {
-					state:					null,
-					checked:				undefined,
-					unchecked:				undefined,
-					indeterminate:		undefined
+					state:				undefined,
+					checked:			undefined,
+					unchecked:			undefined,
+					indeterminate:		undefined,
+
+					change:				undefined,
+					init:				undefined
 				},
 
 				_setOptions: function(options) {
@@ -46,31 +49,42 @@
 							case false: that.options.state = true; break;
 							default:    that.options.state = false; break;
 						}
-						that._refresh();
+						that._refresh(that.options.change);
 					});
 
-					that.options.checked		= that.element.attr('checkedvalue')	|| that.options.checked;
-					that.options.unchecked		= that.element.attr('uncheckedvalue') || that.options.unchecked;
+					that.options.checked		= that.element.attr('checkedvalue')		  || that.options.checked;
+					that.options.unchecked		= that.element.attr('uncheckedvalue')	  || that.options.unchecked;
 					that.options.indeterminate	= that.element.attr('indeterminatevalue') || that.options.indeterminate;
 
-					that.options.state = typeof that.element.attr('indeterminate') !== 'undefined'? null : that.element.is(':checked');
-					that._refresh();
+					if (typeof that.options.state === 'undefined') {
+						that.options.state		= typeof that.element.attr('indeterminate') !== 'undefined'? null : that.element.is(':checked');
+					}
+
+					that._refresh(that.options.init);
 
 					return this;
 				},
 
-				_refresh: function() {
-					this.element.data(pluginName, this.value());
-					
-					if (this.options.state === null) {
-						this.element.attr('indeterminate', 'indeterminate');
-						this.element.prop('indeterminate', true);
+				_refresh: function(callback) {
+					var that	= this,
+						value	= this.value();
+
+					that.element.data(pluginName, value);
+
+					if (that.options.state === null) {
+						that.element.attr('indeterminate', 'indeterminate');
+						that.element.prop('indeterminate', true);
 					} else {
-						this.element.removeAttr('indeterminate');
-						this.element.prop('indeterminate', false);
+						that.element.removeAttr('indeterminate');
+						that.element.prop('indeterminate', false);
 					}
-					
-					this.element.attr('checked', this.options.state);
+
+					that.element.attr('checked', that.options.state);
+
+
+					if ($.isFunction(callback)) {
+						callback(that.options.state, that.value());
+					}
 				},
 
 				state: function(value) {
@@ -78,7 +92,8 @@
 						return this.options.state;
 					} else {
 						this.options.state = value;
-						this._refresh();
+						
+						this._refresh(this.options.change);
 					}
 					return this;
 				},
@@ -86,8 +101,8 @@
 				value: function() {
 					var value;
 					switch (this.options.state) {
-						case true:	value = this.options.checked;				break;
-						case false: value = this.options.unchecked;			break;
+						case true:	value = this.options.checked;		break;
+						case false: value = this.options.unchecked;		break;
 						case null:	value = this.options.indeterminate;	break;
 					}
 					return typeof value === 'undefined'? this.element.attr('value') : value;
@@ -109,7 +124,7 @@
 				result = tristate;
             } else {
 				$.each(tristates, function() {
-					if (this.element.is(that)) {						
+					if (this.element.is(that)) {
 						result = this[operation].apply(this, [value]);
 						return false;
 					}
