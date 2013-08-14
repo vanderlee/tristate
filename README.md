@@ -1,6 +1,8 @@
 jQuery Tristate
 ===============
-Version v0.1
+Version v1.0
+By Martijn van der Lee (http://martijn.vanderlee.com)
+Based on work by Chris Coyier (http://css-tricks.com/indeterminate-checkboxes/)
 
 jQuery tristate (indeterminate) checkbox with pseudo selectors and optional
 value modification and .val() overwrite.

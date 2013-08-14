@@ -1,0 +1,36 @@
+{
+	"name": "tristate",
+	"version": "1.0",
+	"title": "Vanderlee Tristate",
+	"description": "jQuery standalone tristate (indeterminate) checkbox with pseudo selectors and optional value modification and .val() overwrite. Standalone, so usable for purposes other than list/tree marking.",
+	"author": {
+			"name": "Martijn van der Lee",
+			"url": "http://martijn.vanderlee.com",
+			"email": "martijn@vanderlee.com"
+	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://opensource.org/licenses/MIT"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vanderlee/tristate.git"
+	},
+	"dependencies": {
+		"jquery": ">=1.6.2"
+	},
+	"homepage": "http://vanderlee.github.com/tristate",
+	"demo": "http://vanderlee.github.com/tristate",
+	"download":"https://github.com/vanderlee/tristate",
+	"bugs": "https://github.com/vanderlee/tristate/issues",
+	"maintainers": [
+		{
+			"name": "Martijn van der Lee",
+			"url": "http://martijn.vanderlee.com",
+			"email": "martijn@vanderlee.com"
+		}
+	],
+	"keywords": ["tristate", "checkbox", "ui", "indeterminate", "checked"]
+}
