@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
- <head>
+	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>jQuery.Tristate</title>
 
@@ -29,14 +29,16 @@
 
 			h1,
 			h2 {
-				margin:					0;
-				margin-bottom:			.5em;
 				background:				black;
 				color:					white;
 				padding:				.2em .4em;
 			}
+			h1 {
+				-webkit-column-span:	all;
+						column-span:	all;
+			}
 			h2 {
-				margin-top:				1em;
+				background:				gray;
 			}
 
 			hr {
@@ -57,20 +59,105 @@
 				border:			solid thin silver;
 				padding:		.1em .2em;
 			}
+
+			.clickable {
+				cursor: pointer;
+			}
+
+			li.L0, li.L1, li.L2, li.L3,
+			li.L5, li.L6, li.L7, li.L8 {
+				list-style-type: decimal !important
+			}
+			pre {
+				tab-size:	4;
+				overflow-x: auto;
+			}
 		</style>
 
 		<!-- jQuery/jQueryUI (hosted) -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
 		<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>-->
 
-		<!-- README.md inclusion -->
+		<!-- Markdown parser -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
+
+		<!-- Prettyprint -->
+		<link href="https://google-code-prettify.googlecode.com/svn/loader/prettify.css" rel="stylesheet" type="text/css"/>
+		<script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
+
 		<script>
 			$(function() {
+				function tabsToSpaces(line, tabsize) {
+					var out		= '',
+						tabsize = tabsize || 4;
+					for (c in line) {
+						var char = line.charAt(c);
+						if (char === '\t') {
+							do {
+								out += ' ';
+							} while (out.length % tabsize);
+						} else {
+							out += char;
+						}
+					}
+					return out;
+				}
+
+				function prettyPrintElement(element, type) {
+					code = $(element).html().split('\n');
+
+					// Convert tabs to spaces
+					var tabsize		= 4,
+						minlength	= 2E53;
+					for (l in code) {
+						code[l] = tabsToSpaces(code[l], tabsize);
+					}
+
+					// determine minimum length
+					var minlength = 2E53;
+					var first = 2E53;
+					var last = 0;
+					for (l in code) {
+						if (/\S/.test(code[l])) {
+							minlength = Math.min(minlength, /^\s*/.exec(code[l])[0].length);
+							first = Math.min(first, l);
+							last = Math.max(last, l);
+						}
+					}
+
+					code = code.slice(first, last + 1);
+
+					// strip tabs at start
+					for (l in code) {
+						code[l] = code[l].slice(minlength);
+					}
+
+					// recombine
+					code = code.join('\n');
+
+					var fragment = $('<pre class="prettyprint linenums"><code/></pre>').text(code).insertAfter(element);
+					$('<h3 class="clickable">'+type+'&hellip;</h3>').insertBefore(fragment).click(function() {
+						fragment.slideToggle();
+					});
+				}
+
+				// extract html fragments
+				$('div.prettyprint, span.prettyprint').each(function() {
+					prettyPrintElement(this, 'HTML');
+				});
+
+				// extract scripts
+				$('script.prettyprint').each(function() {
+					prettyPrintElement(this, 'Javascript');
+				});
+
+				// Include the readme
 				var markdown = new Markdown.Converter();
 				$.get('README.md', function(readme) {
 					$('#readme').html(markdown.makeHtml(readme));
-				});
+					$('#readme pre').addClass('prettyprint linenums');
+					prettyPrint();
+				});				
 			});
 		</script>
 
@@ -81,19 +168,21 @@
 		<a href="https://github.com/vanderlee/tristate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
 		<div class="chapter">
-			<div id="readme" class="chapter"></div>
+			<div id="readme"></div>
 
 			<hr/>
 
-			<div id="examples" class="chapter">
+			<div id="examples">
 				<h1>Examples</h1>
 				Try it yourself&hellip;
 
 				<h2>Quick start (look in console)</h2>
-				<input type="checkbox" class="tristate" value="1"/>
-				<input type="checkbox" class="tristate" value="1" checked="checked"/>
-				<input type="checkbox" class="tristate" value="1" indeterminate="1"/>
-				<script>
+				<div class="prettyprint">
+					<input type="checkbox" class="tristate" value="1"/>
+					<input type="checkbox" class="tristate" value="1" checked="checked"/>
+					<input type="checkbox" class="tristate" value="1" indeterminate="1"/>
+				</div>
+				<script class="prettyprint">
 					$(function() {
 						$('.tristate').tristate({
 							change: function(state, value) {
@@ -108,9 +197,11 @@
 				</script>
 
 				<h2>Alternative values; "Good", "Maybe", "Bad"</h2>
-				<div><input id="tristate" type="checkbox"/></div>
-				<div>Current value returned by <code>$.val()</code>: <span id="tristate-value" class="output"></span></div>
-				<script>
+				<div class="prettyprint">
+					<div><input id="tristate" type="checkbox"/></div>
+					<div>Current value returned by <code>$.val()</code>: <span id="tristate-value" class="output"></span></div>
+				</div>
+				<script class="prettyprint">
 					$(function() {
 						function output(state, value) {
 							$('#tristate-value').text(value);
@@ -123,18 +214,19 @@
 							init:				output,
 							change:				output
 						});
-
 					});
 				</script>
 
 				<h2>Set state by method calls</h2>
-				<div><input id="set-by-method" type="checkbox"/></div>
-				<div>
-					<button id="setChecked">set checked</button>
-					<button id="setUnchecked">set unchecked</button>
-					<button id="setIndeterminate">set indeterminate</button>
+				<div class="prettyprint">
+					<div><input id="set-by-method" type="checkbox"/></div>
+					<div>
+						<button id="setChecked">set checked</button>
+						<button id="setUnchecked">set unchecked</button>
+						<button id="setIndeterminate">set indeterminate</button>
+					</div>
 				</div>
-				<script>
+				<script class="prettyprint">
 					$(function() {
 						var $tristate = $('#set-by-method').tristate();
 
@@ -151,9 +243,11 @@
 				</script>
 
 				<h2>HTML expando attributes for values (1/0/?)</h2>
-				<div><input type="checkbox" id="expando" value="" checkedvalue="1" uncheckedvalue="0" indeterminatevalue="?"/></div>
-				<div>Current value returned by <code>$.val()</code>: <span id="expando-value" class="output"></span></div>
-				<script>
+				<div class="prettyprint">
+					<div><input type="checkbox" id="expando" value="" checkedvalue="1" uncheckedvalue="0" indeterminatevalue="?"/></div>
+					<div>Current value returned by <code>$.val()</code>: <span id="expando-value" class="output"></span></div>
+				</div>
+				<script class="prettyprint">
 					$(function() {
 						function output(state, value) {
 							$('#expando-value').text(value);

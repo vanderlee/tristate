@@ -1,7 +1,9 @@
 jQuery Tristate
 ===============
-Version v1.0
+Version v1.0.2
+
 By Martijn van der Lee (http://martijn.vanderlee.com)
+
 Based on work by Chris Coyier (http://css-tricks.com/indeterminate-checkboxes/)
 
 jQuery tristate (indeterminate) checkbox with pseudo selectors and optional
@@ -31,6 +33,11 @@ Sourcecode on Github: https://github.com/vanderlee/tristate
 
 Quick start
 -----------
+The following code quickly shows you how to use the tristate plugins.
+
+There are multiple ways to use tristate, you should look at the included
+examples to learn the way you prefer.
+
 	<input type="checkbox" class="tristate"/>
 	<input type="checkbox" class="tristate" checked="checked"/>
 	<input type="checkbox" class="tristate" indeterminate="1"/>
