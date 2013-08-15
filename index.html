@@ -8,10 +8,10 @@
 			body {
 				font-family:		"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
 				font-size:			11px;
-				padding:			4em 8em 1em 4em;
+				padding:			3em 8em 1em 4em;
 			}
 
-			.chapter {
+			.book {
 				-webkit-columns:		460px;
 				   -moz-columns:		460px;
 						columns:		460px;
@@ -103,7 +103,7 @@
 					return out;
 				}
 
-				function prettyPrintElement(element, type) {
+				function visualizeElement(element, type) {
 					code = $(element).html().split('\n');
 
 					// Convert tabs to spaces
@@ -143,12 +143,12 @@
 
 				// extract html fragments
 				$('div.prettyprint, span.prettyprint').each(function() {
-					prettyPrintElement(this, 'HTML');
+					visualizeElement(this, 'HTML');
 				});
 
 				// extract scripts
 				$('script.prettyprint').each(function() {
-					prettyPrintElement(this, 'Javascript');
+					visualizeElement(this, 'Javascript');
 				});
 
 				// Include the readme
@@ -157,7 +157,14 @@
 					$('#readme').html(markdown.makeHtml(readme));
 					$('#readme pre').addClass('prettyprint linenums');
 					prettyPrint();
-				});				
+
+					// build menu
+					var menuitems = [];
+					$('.chapter').each(function() {
+						menuitems.push('<a href="'+$(this).attr('id')+'">'+$(this).find('h1,h2,h3,*').first().text()+'</a>');
+					});
+					$(menu).html(menuitems.join(' &mdash; '));
+				});
 			});
 		</script>
 
@@ -167,12 +174,14 @@
     <body>
 		<a href="https://github.com/vanderlee/tristate"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
-		<div class="chapter">
-			<div id="readme"></div>
+		<div id="menu"></div>
+
+		<div class="book">
+			<div id="readme" class="chapter"></div>
 
 			<hr/>
 
-			<div id="examples">
+			<div id="examples" class="chapter">
 				<h1>Examples</h1>
 				Try it yourself&hellip;
 
