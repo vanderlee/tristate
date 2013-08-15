@@ -92,7 +92,7 @@
 						return this.options.state;
 					} else {
 						this.options.state = value;
-						
+
 						this._refresh(this.options.change);
 					}
 					return this;
@@ -138,7 +138,11 @@
     $.fn.val = function(value) {
         var data = this.data(pluginName);
         if (typeof data === 'undefined') {
-            return originalVal.call(this, value);
+	        if (typeof value === 'undefined') {
+	            return originalVal.call(this);
+			} else {
+				return originalVal.call(this, value);
+			}
 		} else {
 	        if (typeof value === 'undefined') {
 				return data;
