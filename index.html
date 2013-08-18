@@ -36,41 +36,41 @@
 			h1 {
 				-webkit-column-span:	all;
 						column-span:	all;
+				margin-top:				2em;
 			}
 			h2 {
 				background:				gray;
 			}
 
 			hr {
-				border-top:		double;
-				margin:			2em 25%;
+				border-top:			double;
+				margin:				2em 25%;
 			}
 
 			#footer {
-				margin-top:		4em;
-				text-align:		center;
-				color:			silver;
-				border-top:		thin solid silver;
-				padding-top:	1em;
+				margin-top:			4em;
+				text-align:			center;
+				color:				silver;
+				border-top:			thin solid silver;
+				padding-top:		1em;
 			}
 			
 			.output {
-				font-family:	monospace;
-				border:			solid thin silver;
-				padding:		.1em .2em;
+				font-family:		monospace;
+				border:				solid thin silver;
+				padding:			.2em .4em;
+				background-color:	#cf3;
 			}
 
 			.clickable {
-				cursor: pointer;
+				cursor:				pointer;
 			}
 
-			li.L0, li.L1, li.L2, li.L3,
-			li.L5, li.L6, li.L7, li.L8 {
-				list-style-type: decimal !important
-			}
 			pre {
-				tab-size:	4;
-				overflow-x: auto;
+				tab-size:			4;
+				overflow-x:			auto;
+				background-color:	#eee;
+				-webkit-column-break-inside: avoid;
 			}
 		</style>
 
@@ -135,7 +135,7 @@
 					// recombine
 					code = code.join('\n');
 
-					var fragment = $('<pre class="prettyprint linenums"><code/></pre>').text(code).insertAfter(element);
+					var fragment = $('<pre class="prettyprint"><code/></pre>').text(code).insertAfter(element);
 					$('<h3 class="clickable">'+type+'&hellip;</h3>').insertBefore(fragment).click(function() {
 						fragment.slideToggle();
 					});
@@ -155,7 +155,7 @@
 				var markdown = new Markdown.Converter();
 				$.get('README.md', function(readme) {
 					$('#readme').html(markdown.makeHtml(readme));
-					$('#readme pre').addClass('prettyprint linenums');
+					$('#readme pre').addClass('prettyprint');
 					prettyPrint();
 
 					// build menu
@@ -178,8 +178,6 @@
 
 		<div class="book">
 			<div id="readme" class="chapter"></div>
-
-			<hr/>
 
 			<div id="examples" class="chapter">
 				<h1>Examples</h1>
@@ -268,6 +266,12 @@
 						});
 					});
 				</script>
+			</div>
+
+			<div id="unittest" class="chapter">
+				<h1>Unittest</h1>
+				jQuery.tristate comes with a complete set of QUnit-based unittests.<br/>
+				Click here to run the tests in a new window: <a href="test/" target="_blank">Unittests</a>
 			</div>
 		</div>
 		
