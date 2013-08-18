@@ -13,7 +13,6 @@
  * Tristate checkbox with support features
  * pseudo selectors
  * val() overwrite
- * Requires jQuery.
  */
 
 ;(function($){
@@ -26,7 +25,7 @@
 			return {
 				element: $(element),
 
-				options: {
+				_options: {
 					state:				undefined,
 					checked:			undefined,
 					unchecked:			undefined,
@@ -37,30 +36,30 @@
 				},
 
 				_setOptions: function(options) {
-					$.extend(this.options, options);
+					$.extend(this._options, options);
 				},
 
 				_create: function() {
 					var that = this;
 
 					that.element.change(function(e) {
-						switch (that.options.state) {
-							case true:  that.options.state = null; break;
-							case false: that.options.state = true; break;
-							default:    that.options.state = false; break;
+						switch (that._options.state) {
+							case true:  that._options.state = null; break;
+							case false: that._options.state = true; break;
+							default:    that._options.state = false; break;
 						}
-						that._refresh(that.options.change);
+						that._refresh(that._options.change);
 					});
 
-					that.options.checked		= that.element.attr('checkedvalue')		  || that.options.checked;
-					that.options.unchecked		= that.element.attr('uncheckedvalue')	  || that.options.unchecked;
-					that.options.indeterminate	= that.element.attr('indeterminatevalue') || that.options.indeterminate;
+					that._options.checked		= that.element.attr('checkedvalue')		  || that._options.checked;
+					that._options.unchecked		= that.element.attr('uncheckedvalue')	  || that._options.unchecked;
+					that._options.indeterminate	= that.element.attr('indeterminatevalue') || that._options.indeterminate;
 
-					if (typeof that.options.state === 'undefined') {
-						that.options.state		= typeof that.element.attr('indeterminate') !== 'undefined'? null : that.element.is(':checked');
+					if (typeof that._options.state === 'undefined') {
+						that._options.state		= typeof that.element.attr('indeterminate') !== 'undefined'? null : that.element.is(':checked');
 					}
 
-					that._refresh(that.options.init);
+					that._refresh(that._options.init);
 
 					return this;
 				},
@@ -71,7 +70,7 @@
 
 					that.element.data(pluginName, value);
 
-					if (that.options.state === null) {
+					if (that._options.state === null) {
 						that.element.attr('indeterminate', 'indeterminate');
 						that.element.prop('indeterminate', true);
 					} else {
@@ -79,59 +78,87 @@
 						that.element.prop('indeterminate', false);
 					}
 
-					that.element.attr('checked', that.options.state);
+					that.element.attr('checked', that._options.state);
 
 
 					if ($.isFunction(callback)) {
-						callback(that.options.state, that.value());
+						callback.call(that.element, that._options.state, that.value());
 					}
 				},
 
 				state: function(value) {
 					if (typeof value === 'undefined') {
-						return this.options.state;
-					} else {
-						this.options.state = value;
+						return this._options.state;
+					} else if (value === true || value === false || value === null) {
+						this._options.state = value;
 
-						this._refresh(this.options.change);
+						this._refresh(this._options.change);
 					}
 					return this;
 				},
 
-				value: function() {
-					var value;
-					switch (this.options.state) {
-						case true:	value = this.options.checked;		break;
-						case false: value = this.options.unchecked;		break;
-						case null:	value = this.options.indeterminate;	break;
+				value: function(value) {
+					if (typeof value === 'undefined') {
+						var value;
+						switch (this._options.state) {
+							case true:
+								value = this._options.checked;
+								break;
+
+							case false:
+								value = this._options.unchecked;
+								break;
+
+							case null:	
+								value = this._options.indeterminate;
+								break;
+						}
+						return typeof value === 'undefined'? this.element.attr('value') : value;
+					} else {
+						switch (value) {
+							case this._options.checked:
+								this._options.state = true;
+								break;
+
+							case this._options.unchecked:
+								this._options.state = false;
+								break;
+
+							case this._options.indeterminate:
+								this._options.state = null;
+								break;
+						}
 					}
-					return typeof value === 'undefined'? this.element.attr('value') : value;
 				}
 			};
 		};
 
     $.fn.tristate = function(operation, value) {
-        return this.each(function() {
-			var that		= this,
-				tristate,
-				result;
+		if (typeof operation === 'undefined' || $.isPlainObject(operation)) {
+			return this.each(function() {
+				var that		= this,
+					tristate,
+					result;
 
-            if (typeof operation === 'undefined' || $.isPlainObject(operation)) {
 				tristate = widget(this);
 				tristate._setOptions(operation);
 				tristate._create.apply(tristate);
 				tristates.push(tristate);
-				result = tristate;
-            } else {
-				$.each(tristates, function() {
-					if (this.element.is(that)) {
-						result = this[operation].apply(this, [value]);
-						return false;
-					}
-				});
-			}
+			});
+		} else {
+			var that	= this,
+				tristate,
+				result;
+
+			$.each(tristates, function() {
+				if (this.element.is(that)) {
+					result = this[operation].call(this, value);
+					return false;
+				}
+			});
+
 			return result;
-        });
+		}
     };
 
 	// Overwrite fn.val
