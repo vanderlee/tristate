@@ -161,7 +161,7 @@
 					// build menu
 					var menuitems = [];
 					$('.chapter').each(function() {
-						menuitems.push('<a href="'+$(this).attr('id')+'">'+$(this).find('h1,h2,h3,*').first().text()+'</a>');
+						menuitems.push('<a href="#'+$(this).attr('id')+'">'+$(this).find('h1,h2,h3,*').first().text()+'</a>');
 					});
 					$(menu).html(menuitems.join(' &mdash; '));
 				});
