@@ -4,14 +4,39 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>jQuery.Tristate</title>
 
+		<!-- jQuery/jQueryUI (hosted) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>-->
+		<!--<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/sunny/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+
+		<!-- Markdown parser -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
+
+		<!-- Prettyprint -->
+		<link href="https://google-code-prettify.googlecode.com/svn/loader/prettify.css" rel="stylesheet" type="text/css"/>
+		<script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
+
+		<!-- Index -->
 		<style>
 			body {
-				font-family:		"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
-				font-size:			11px;
-				padding:			3em 8em 1em 4em;
+				font-family:			"Segoe UI", Verdana, Helvetica, Arial, sans-serif;
+				font-size:				11px;
+				padding:				3em 8em 1em 4em;
 			}
 
-			.book {
+			#menu {
+				margin-bottom:			2em;
+			}
+
+			#preview {
+				border:					solid thin silver;
+				padding:				2em;
+				margin:					0 20%;
+				text-align:				center;
+				box-shadow:				0 0 2em silver;
+			}
+
+			#book {
 				-webkit-columns:		460px;
 				   -moz-columns:		460px;
 						columns:		460px;
@@ -36,7 +61,7 @@
 			h1 {
 				-webkit-column-span:	all;
 						column-span:	all;
-				margin-top:				2em;
+				margin-top:				1em;
 			}
 			h2 {
 				background:				gray;
@@ -54,7 +79,7 @@
 				border-top:			thin solid silver;
 				padding-top:		1em;
 			}
-			
+
 			.output {
 				font-family:		monospace;
 				border:				solid thin silver;
@@ -73,18 +98,6 @@
 				-webkit-column-break-inside: avoid;
 			}
 		</style>
-
-		<!-- jQuery/jQueryUI (hosted) -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js"></script>
-		<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>-->
-
-		<!-- Markdown parser -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/pagedown/1.0/Markdown.Converter.min.js"></script>
-
-		<!-- Prettyprint -->
-		<link href="https://google-code-prettify.googlecode.com/svn/loader/prettify.css" rel="stylesheet" type="text/css"/>
-		<script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
-
 		<script>
 			$(function() {
 				function tabsToSpaces(line, tabsize) {
@@ -176,7 +189,16 @@
 
 		<div id="menu"></div>
 
-		<div class="book">
+		<div id="preview">
+			<input type="checkbox" id="preview-tristate" indeterminate="indeterminate"/><label for="preview-tristate">Click to change between checked, unchecked and indeterminate states!</label>
+			<script>
+				$(function() {
+					$('#preview-tristate').tristate();
+				});
+			</script>
+		</div>
+
+		<div ID="book">
 			<div id="readme" class="chapter"></div>
 
 			<div id="examples" class="chapter">
@@ -271,7 +293,7 @@
 			<div id="unittest" class="chapter">
 				<h1>Unittest</h1>
 				jQuery.tristate comes with a complete set of QUnit-based unittests.<br/>
-				Click here to run the tests in a new window: <a href="test/" target="_blank">Unittests</a>
+				Click here to run the tests in a new window: <a href="unittest/index.html" target="_blank">Unittests</a>
 			</div>
 		</div>
 		

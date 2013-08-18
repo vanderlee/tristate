@@ -57,7 +57,7 @@ examples to learn the way you prefer.
 	</script>
 
 Documentation/API
------------------
+=================
 ### `.tristate(options)`
 >	Turn a normal `checkbox` input into a tristate input.
 
