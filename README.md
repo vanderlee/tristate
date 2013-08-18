@@ -1,6 +1,6 @@
 jQuery Tristate
 ===============
-Version v1.0.2
+Version v1.0.3
 
 By Martijn van der Lee (http://martijn.vanderlee.com)
 
@@ -96,6 +96,20 @@ Documentation/API
 > > Triggered whenever the state changes.
 	State can be `true`, `false` or `null`. Value is the value as it would be
 	returned from `.val()`.
+
+
+>	**Methods**
+
+> -	`state`
+
+> > Either get or set the state of the checkbox. Uses `true` for checked,
+	`false` for unchecked or `null` for indeterminate state.
+
+> -	`value`
+
+> > Get the current value or set the state by specifying the value.
+	Setting the value only works if you have specified values (either using
+	expando attributes or options) for the different states.
 
 ###	`.val()`
 >	By default, returns the value as if it were a plain checkbox; the state is
