@@ -27,6 +27,7 @@
 
 				_options: {
 					state:				undefined,
+					value:				undefined,	// one-way only!
 					checked:			undefined,
 					unchecked:			undefined,
 					indeterminate:		undefined,
@@ -40,7 +41,8 @@
 				},
 
 				_create: function() {
-					var that = this;
+					var that = this,
+						state;
 
 					that.element.change(function(e) {
 						switch (that._options.state) {
@@ -55,8 +57,16 @@
 					that._options.unchecked		= that.element.attr('uncheckedvalue')	  || that._options.unchecked;
 					that._options.indeterminate	= that.element.attr('indeterminatevalue') || that._options.indeterminate;
 
+					// Initially, set state based on option state or attributes
 					if (typeof that._options.state === 'undefined') {
 						that._options.state		= typeof that.element.attr('indeterminate') !== 'undefined'? null : that.element.is(':checked');
+					}
+					// If value specified, overwrite with value
+					if (typeof that._options.value !== 'undefined') {
+						state = that._parseValue(that._options.value);
+						if (typeof state !== 'undefined') {
+							that._options.state = state;
+						}
 					}
 
 					that._refresh(that._options.init);
@@ -97,6 +107,16 @@
 					return this;
 				},
 
+				_parseValue: function(value) {
+					if (value === this._options.checked) {
+						return true;
+					} else if (value === this._options.unchecked) {
+						return false;
+					} else if (value === this._options.indeterminate) {
+						return null;
+					}
+				},
+
 				value: function(value) {
 					if (typeof value === 'undefined') {
 						var value;
@@ -109,24 +129,16 @@
 								value = this._options.unchecked;
 								break;
 
-							case null:	
+							case null:
 								value = this._options.indeterminate;
 								break;
 						}
 						return typeof value === 'undefined'? this.element.attr('value') : value;
 					} else {
-						switch (value) {
-							case this._options.checked:
-								this._options.state = true;
-								break;
-
-							case this._options.unchecked:
-								this._options.state = false;
-								break;
-
-							case this._options.indeterminate:
-								this._options.state = null;
-								break;
+						var state = this._parseValue(value);
+						if (typeof state !== 'undefined') {
+							this._options.state = state;
+							this._refresh(this._options.change);
 						}
 					}
 				}
@@ -193,6 +205,6 @@
 
 	// :tristate selector
     $.expr.filters.tristate = function(element) {
-		return $(element).hasData(pluginName);
+		return typeof $(element).data(pluginName) !== 'undefined';
     };
 }(jQuery));
