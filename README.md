@@ -1,6 +1,6 @@
 jQuery Tristate
 ===============
-Version v1.0.3
+Version v1.0.4
 
 By Martijn van der Lee (http://martijn.vanderlee.com)
 
