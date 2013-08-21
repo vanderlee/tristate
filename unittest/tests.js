@@ -8,9 +8,14 @@ qunit.jqui.tests({
 		'use strict';
 
 		var cb = $('<input type="checkbox"/>').appendTo('body');
-		cb.tristate();
 
 		equal(cb.is(':visible'),		true,	"It's visible");
+		equal(cb.is(':tristate'),		false,	"It's not a tristate");
+
+		cb.tristate();
+
+		equal(cb.is(':visible'),		true,	"It's still visible");
+		equal(cb.is(':tristate'),		true,	"It's a tristate");
 
 		equal(cb.is(':checked'),		false,	"Initial, Checked");
 		equal(cb.is(':determinate'),	true,	"Initial, Determinate");
@@ -128,6 +133,54 @@ qunit.jqui.tests({
 		equal(cb.is(':indeterminate'),	true,	"Indeterminate");
 	},
 
+	"Value option checked": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox"/>').appendTo('body');
+		cb.tristate({
+			value:			'C',
+			checked:		'C',
+			unchecked:		'U',
+			indeterminate:	'I'
+		});
+
+		equal(cb.is(':checked'),		true,	"Checked");
+		equal(cb.is(':determinate'),	true,	"Determinate");
+		equal(cb.is(':indeterminate'),	false,	"Indeterminate");
+	},
+
+	"Value option unchecked": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox" checked="checked"/>').appendTo('body');
+		cb.tristate({
+			value:			'U',
+			checked:		'C',
+			unchecked:		'U',
+			indeterminate:	'I'
+		});
+
+		equal(cb.is(':checked'),		false,	"Checked");
+		equal(cb.is(':determinate'),	true,	"Determinate");
+		equal(cb.is(':indeterminate'),	false,	"Indeterminate");
+	},
+
+	"Value option indeterminate": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox"/>').appendTo('body');
+		cb.tristate({
+			value:			'I',
+			checked:		'C',
+			unchecked:		'U',
+			indeterminate:	'I'
+		});
+
+		equal(cb.is(':checked'),		false,	"Checked");
+		equal(cb.is(':determinate'),	false,	"Determinate");
+		equal(cb.is(':indeterminate'),	true,	"Indeterminate");
+	},
+
 	"Public method 'state' - get": function() {
 		'use strict';
 
@@ -216,6 +269,31 @@ qunit.jqui.tests({
 		cb.tristate('value', '?');
 		equal(cb.tristate('value'),		'U',	"Unchecked");
 		equal(cb.tristate('state'),		false,	"Unchecked");
+	},
+
+	"Public method 'value' - set 0/empty": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox"/>').appendTo('body');
+		cb.tristate({
+			checked:		'',
+			unchecked:		0,
+			indeterminate:	false
+		});
+
+		equal(cb.tristate('state'),		false,	"Unchecked");
+
+		cb.tristate('value', '');
+		equal(cb.tristate('state'),		true,	"Checked");
+
+		cb.tristate('value', false);
+		equal(cb.tristate('state'),		null,	"Indeterminate");
+
+		cb.tristate('value', 0);
+		equal(cb.tristate('state'),		false,	"Unchecked");
+
+		cb.tristate('value', '?');
+		equal(cb.tristate('state'),		false,	"Unchanged");
 	},
 
 	"Events": {
