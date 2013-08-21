@@ -102,29 +102,32 @@
 			$(function() {
 				function tabsToSpaces(line, tabsize) {
 					var out		= '',
-						tabsize = tabsize || 4;
+						tabsize = tabsize || 4,
+						c;
 					for (c in line) {
-						var char = line.charAt(c);
-						if (char === '\t') {
+						var ch = line.charAt(c);
+						if (ch === '\t') {
 							do {
 								out += ' ';
 							} while (out.length % tabsize);
 						} else {
-							out += char;
+							out += ch;
 						}
 					}
 					return out;
 				}
 
 				function visualizeElement(element, type) {
-					code = $(element).html().split('\n');
+					var code		= $(element).html().split('\n'),
+						tabsize		= 4,
+						minlength	= 2E53,
+						l;
 
 					// Convert tabs to spaces
-					var tabsize		= 4,
-						minlength	= 2E53;
 					for (l in code) {
 						code[l] = tabsToSpaces(code[l], tabsize);
 					}
+
 
 					// determine minimum length
 					var minlength = 2E53;
@@ -173,8 +176,11 @@
 
 					// build menu
 					var menuitems = [];
-					$('.chapter').each(function() {
-						menuitems.push('<a href="#'+$(this).attr('id')+'">'+$(this).find('h1,h2,h3,*').first().text()+'</a>');
+					$('h1').each(function() {
+						var text	= $(this).text(),
+							id		= $(this).attr('id') || 'chapter '+text;
+						$(this).attr('id', id);
+						menuitems.push('<a href="#'+id+'">'+text+'</a>');
 					});
 					$(menu).html(menuitems.join(' &mdash; '));
 				});
