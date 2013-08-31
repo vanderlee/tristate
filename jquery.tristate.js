@@ -1,13 +1,13 @@
 /*jslint devel: true, bitwise: true, regexp: true, browser: true, confusion: true, unparam: true, eqeq: true, white: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
 /*globals jQuery */
 
-/*
+/*!
  * Tristate
  *
  * Copyright (c) 2013 Martijn W. van der Lee
  * Licensed under the MIT.
- *
- * Based on work by:
+ */
+/* Based on work by:
  *  Chris Coyier (http://css-tricks.com/indeterminate-checkboxes/)
  *
  * Tristate checkbox with support features
