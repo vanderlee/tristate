@@ -2,7 +2,8 @@ jQuery Tristate
 ===============
 Version v1.0.4
 
-By Martijn van der Lee (http://martijn.vanderlee.com)
+Copyright &copy; 2013 Martijn van der Lee (http://martijn.vanderlee.com).
+MIT Open Source license applies.
 
 Based on work by Chris Coyier (http://css-tricks.com/indeterminate-checkboxes/)
 
