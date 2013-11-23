@@ -44,7 +44,7 @@
 					var that = this,
 						state;
 
-					that.element.change(function(e) {
+					that.element.click(function(e) {
 						switch (that._options.state) {
 							case true:  that._options.state = null; break;
 							case false: that._options.state = true; break;
