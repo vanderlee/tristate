@@ -35,6 +35,7 @@ Sourcecode on Github: https://github.com/vanderlee/tristate
 Browser support
 ---------------
 Tested with v1.0.5
+
 -	Chrome 31
 -	FireFox 25
 -	Opera 17
