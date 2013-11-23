@@ -32,6 +32,14 @@ Current version: https://github.com/vanderlee/tristate/archive/master.zip
 
 Sourcecode on Github: https://github.com/vanderlee/tristate
 
+Browser support
+---------------
+Tested with v1.0.5
+-	Chrome 31
+-	FireFox 25
+-	Opera 17
+-	Internet Explorer 10
+
 Quick start
 -----------
 The following code quickly shows you how to use the tristate plugins.
