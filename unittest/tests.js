@@ -8,33 +8,30 @@ qunit.jqui.tests({
 		'use strict';
 
 		var cb = $('<input type="checkbox"/>').appendTo('body');
-
-		equal(cb.is(':visible'),		true,	"It's visible");
 		equal(cb.is(':tristate'),		false,	"It's not a tristate");
 
 		cb.tristate();
 
-		equal(cb.is(':visible'),		true,	"It's still visible");
 		equal(cb.is(':tristate'),		true,	"It's a tristate");
 
-		equal(cb.is(':checked'),		false,	"Initial, Checked");
+		equal(cb.is(':checked'),		false,	"Initial, Not checked");
 		equal(cb.is(':determinate'),	true,	"Initial, Determinate");
-		equal(cb.is(':indeterminate'),	false,	"Initial, Indeterminate");
+		equal(cb.is(':indeterminate'),	false,	"Initial, Not indeterminate");
 
 		cb.click();
 		equal(cb.is(':checked'),		true,	"1st click, Checked");
 		equal(cb.is(':determinate'),	true,	"1st click, Determinate");
-		equal(cb.is(':indeterminate'),	false,	"1st click, Indeterminate");
+		equal(cb.is(':indeterminate'),	false,	"1st click, Not indeterminate");
 
 		cb.click();
-		equal(cb.is(':checked'),		false,	"2nd click, Checked");
-		equal(cb.is(':determinate'),	false,	"2nd click, Determinate");
+		equal(cb.is(':checked'),		false,	"2nd click, Not checked");
+		equal(cb.is(':determinate'),	false,	"2nd click, Not determinate");
 		equal(cb.is(':indeterminate'),	true,	"2nd click, Indeterminate");
 
 		cb.click();
-		equal(cb.is(':checked'),		false,	"3rd click, Checked");
+		equal(cb.is(':checked'),		false,	"3rd click, Not checked");
 		equal(cb.is(':determinate'),	true,	"3rd click, Determinate");
-		equal(cb.is(':indeterminate'),	false,	"3rd click, Indeterminate");
+		equal(cb.is(':indeterminate'),	false,	"3rd click, Not indeterminate");
 
 	},
 			
@@ -159,7 +156,7 @@ qunit.jqui.tests({
 			unchecked:		'U',
 			indeterminate:	'I'
 		});
-
+		
 		equal(cb.is(':checked'),		false,	"Checked");
 		equal(cb.is(':determinate'),	true,	"Determinate");
 		equal(cb.is(':indeterminate'),	false,	"Indeterminate");
