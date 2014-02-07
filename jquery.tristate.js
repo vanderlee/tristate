@@ -4,7 +4,7 @@
 /*!
  * Tristate
  *
- * Copyright (c) 2013 Martijn W. van der Lee
+ * Copyright (c) 2014 Martijn W. van der Lee
  * Licensed under the MIT.
  */
 /* Based on work by:
