@@ -1,6 +1,6 @@
 jQuery Tristate
 ===============
-Version v1.0.5
+Version v1.1
 
 Copyright &copy; 2013 Martijn van der Lee (http://martijn.vanderlee.com).
 MIT Open Source license applies.
@@ -24,9 +24,20 @@ Features
 -	HTML attributes modified by the plugin.
 -	Should support every major browser, including IE6.
 
+Changelog
+-----------
+Version v1.1
+
+-	Fixed memory leak on DOM node removal.
+-	Fixed bug with click fall-through.
+-	Adapted to jQueryUI widget.
+-	Improvements to Unittest for FireFox.
+
 Download
 --------
 jQuery v1.6.2 or higher required. (Will not work with v1.6.1 or before).
+
+jQueryUI v1.8.0 or higher required.
 
 Current version: https://github.com/vanderlee/tristate/archive/master.zip
 
