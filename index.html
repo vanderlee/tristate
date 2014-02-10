@@ -259,12 +259,20 @@
 						<button id="setChecked">set checked</button>
 						<button id="setUnchecked">set unchecked</button>
 						<button id="setIndeterminate">set indeterminate</button>
+						<button id="doJqClick">jQuery click</button>
+						<button id="doJsClick">JS click</button>
 					</div>
 				</div>
 				<script class="prettyprint">
 					$(function() {
 						var $tristate = $('#set-by-method').tristate();
 
+						$('#doJqClick').click(function() {
+							$tristate.click();
+						});
+						$('#doJsClick').click(function() {
+							$tristate.get(0).click();
+						});
 						$('#setIndeterminate').click(function() {
 							$tristate.tristate('state', null);
 						});

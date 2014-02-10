@@ -38,6 +38,10 @@
 				state;
 
 			this.element.click(function(e) {
+				if (e.isTrigger || !e.hasOwnProperty('which')) {
+					e.preventDefault();
+				}
+				
 				switch (that.options.state) {
 					case true:  that.options.state = null; break;
 					case false: that.options.state = true; break;

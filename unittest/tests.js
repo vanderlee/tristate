@@ -18,7 +18,7 @@ qunit.jqui.tests({
 		equal(cb.is(':determinate'),	true,	"Initial, Determinate");
 		equal(cb.is(':indeterminate'),	false,	"Initial, Not indeterminate");
 
-		cb.click();
+		cb.get(0).click();
 		equal(cb.is(':checked'),		true,	"1st click, Checked");
 		equal(cb.is(':determinate'),	true,	"1st click, Determinate");
 		equal(cb.is(':indeterminate'),	false,	"1st click, Not indeterminate");
