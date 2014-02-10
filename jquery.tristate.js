@@ -38,14 +38,12 @@
 				state;
 
 			this.element.click(function(e) {
-				e.preventDefault();
-				
 				switch (that.options.state) {
 					case true:  that.options.state = null; break;
 					case false: that.options.state = true; break;
 					default:    that.options.state = false; break;
 				}
-				
+
 				that._refresh(that.options.change);
 			});
 
@@ -76,15 +74,11 @@
 
 			this.element.data(pluginName, value);
 
-			if (this.options.state === null) {
-				this.element.attr('indeterminate', 'indeterminate');
-				this.element.prop('indeterminate', true);
-			} else {
-				this.element.removeAttr('indeterminate');
-				this.element.prop('indeterminate', false);
-			}
+			this.element[this.options.state === null ? 'attr' : 'removeAttr']('indeterminate', 'indeterminate');
+			this.element.prop('indeterminate', this.options.state === null);
 
-			$(this.element).attr('checked', this.options.state);
+			this.element[this.options.state ? 'attr' : 'removeAttr']('checked', true);
+			this.element.prop('checked', this.options.state === true);
 
 			if ($.isFunction(callback)) {
 				callback.call(this.element, this.options.state, this.value());
