@@ -1,6 +1,6 @@
 jQuery Tristate
 ===============
-Version v1.1
+Version v1.1.1
 
 Copyright &copy; 2013-2014 Martijn van der Lee (http://martijn.vanderlee.com).
 MIT Open Source license applies.
