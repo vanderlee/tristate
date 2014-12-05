@@ -80,6 +80,7 @@
 
 			this.element[this.options.state === null ? 'attr' : 'removeAttr']('indeterminate', 'indeterminate');
 			this.element.prop('indeterminate', this.options.state === null);
+			this.element.get(0).indeterminate = this.options.state === null;
 
 			this.element[this.options.state ? 'attr' : 'removeAttr']('checked', true);
 			this.element.prop('checked', this.options.state === true);
