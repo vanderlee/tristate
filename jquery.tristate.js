@@ -21,7 +21,7 @@
 	 var pluginName	= 'vanderlee.tristate',
 		originalVal = $.fn.val;
 
-	$.widget("vanderlee.tristate", {
+	$.widget(pluginName, {
 		options: {
 			state:				undefined,
 			value:				undefined,	// one-way only!
