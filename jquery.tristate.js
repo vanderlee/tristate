@@ -18,10 +18,10 @@
 (function($){
 	'use strict';
 
-	 var pluginName	= 'vanderlee.tristate',
-		originalVal = $.fn.val;
+	var pluginName	= 'vanderlee.tristate',
+		originalVal	= $.fn.val;
 
-	$.widget("vanderlee.tristate", {
+	$.widget(pluginName, {
 		options: {
 			state:				undefined,
 			value:				undefined,	// one-way only!
@@ -35,9 +35,19 @@
 
 		_create: function() {
 			var that = this,
-				state;
+				state,
+				previous = null;
 
-			this.element.click(function(e) {
+			// Fix for #1
+			if (window.navigator.userAgent.indexOf('Trident') >= 0) {
+				this.element.click(function(e) {
+					if (!this.indeterminate && $(this).attr('indeterminate')) {
+						$(this).trigger('change');						
+					}						
+				});
+			}
+
+			this.element.change(function(e) {
 				if (e.isTrigger || !e.hasOwnProperty('which')) {
 					e.preventDefault();
 				}
@@ -48,7 +58,7 @@
 					default:    that.options.state = false; break;
 				}
 
-				that._refresh(that.options.change);
+				that._refresh(that.options.change);								
 			});
 
 			this.options.checked		= this.element.attr('checkedvalue')		  || this.options.checked;

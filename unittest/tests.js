@@ -324,5 +324,40 @@ qunit.jqui.tests({
 			
 			equal(cb.val(), 13, "After click");
 		}
+	},
+	
+	"Form onchange": function() {
+		'use strict';
+
+		var form = $('<form/>').appendTo('body');
+
+		var cb = $('<input type="checkbox"/>').appendTo(form);
+		cb.tristate({
+			state:		true
+		});
+
+		var checked = cb.is(':checked'),
+			determinate = cb.is(':determinate'),
+			indeterminate = cb.is(':indeterminate');
+
+		form.change(function() {
+			checked = cb.is(':checked');
+			determinate = cb.is(':determinate');
+			indeterminate = cb.is(':indeterminate');
+		});
+
+		equal(true, checked, 'Initially checked')
+		equal(true, determinate, 'Initially determinate')
+		equal(false, indeterminate, 'Initially not indeterminate')
+
+		cb.click();			
+
+		equal(false, checked, 'After click, in form.onchange: not checked')
+		equal(false, determinate, 'After click, in form.onchange: not determinate')
+		equal(true, indeterminate, 'After click, in form.onchange: indeterminate')
+
+		equal(false, cb.is(':checked'), 'After click, in form.onchange: same checked state as current')
+		equal(false, cb.is(':determinate'), 'After click, in form.onchange: same determinate state as current')
+		equal(true, cb.is(':indeterminate'), 'After click, in form.onchange: same indeterminate state as current')
 	}
 });

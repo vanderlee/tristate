@@ -1,6 +1,6 @@
 {
 	"name": "jqtristate",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"title": "Vanderlee Tristate",
 	"description": "jQuery standalone tristate (indeterminate) checkbox with pseudo selectors and optional value modification and .val() overwrite. Standalone, so usable for purposes other than list/tree marking.",
 	"author": {
