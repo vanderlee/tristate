@@ -35,8 +35,7 @@
 
 		_create: function() {
 			var that = this,
-				state,
-				previous = null;
+				state;
 
 			// Fix for #1
 			if (window.navigator.userAgent.indexOf('Trident') >= 0) {
