@@ -2,9 +2,9 @@
 /*globals jQuery */
 
 /*!
- * Tristate
+ * Tristate v1.2.0
  *
- * Copyright (c) 2013-2014 Martijn W. van der Lee
+ * Copyright (c) 2013-2016 Martijn W. van der Lee
  * Licensed under the MIT.
  */
 /* Based on work by:
@@ -15,25 +15,31 @@
  * val() overwrite
  */
 
-(function($){
+;(function($, undefined) {   
 	'use strict';
-
-	var pluginName	= 'vanderlee.tristate',
-		originalVal	= $.fn.val;
-
-	$.widget(pluginName, {
-		options: {
-			state:				undefined,
-			value:				undefined,	// one-way only!
-			checked:			undefined,
-			unchecked:			undefined,
-			indeterminate:		undefined,
-
+	
+	var pluginName = 'tristate',
+		defaults = {
 			change:				undefined,
-			init:				undefined
+			checked:			undefined,
+			indeterminate:		undefined,
+			init:				undefined,
+			state:				undefined,
+			unchecked:			undefined,
+			value:				undefined	// one-way only!
 		},
+		valFunction	= $.fn.val;
 
-		_create: function() {
+    function Plugin(element, options) {
+        if($(element).is(':checkbox')) {        
+            this.element = $(element);
+            this.settings = $.extend( {}, defaults, options );
+            this._create();
+        }
+    }
+
+    $.extend(Plugin.prototype, {	
+		_create: function() {					
 			var that = this,
 				state;
 
@@ -51,33 +57,33 @@
 					e.preventDefault();
 				}
 				
-				switch (that.options.state) {
-					case true:  that.options.state = null; break;
-					case false: that.options.state = true; break;
-					default:    that.options.state = false; break;
+				switch (that.settings.state) {
+					case true:  that.settings.state = null; break;
+					case false: that.settings.state = true; break;
+					default:    that.settings.state = false; break;
 				}
 
-				that._refresh(that.options.change);								
+				that._refresh(that.settings.change);								
 			});
 
-			this.options.checked		= this.element.attr('checkedvalue')		  || this.options.checked;
-			this.options.unchecked		= this.element.attr('uncheckedvalue')	  || this.options.unchecked;
-			this.options.indeterminate	= this.element.attr('indeterminatevalue') || this.options.indeterminate;
+			this.settings.checked		= this.element.attr('checkedvalue')		  || this.settings.checked;
+			this.settings.unchecked		= this.element.attr('uncheckedvalue')	  || this.settings.unchecked;
+			this.settings.indeterminate	= this.element.attr('indeterminatevalue') || this.settings.indeterminate;
 
 			// Initially, set state based on option state or attributes
-			if (typeof this.options.state === 'undefined') {
-				this.options.state		= typeof this.element.attr('indeterminate') !== 'undefined'? null : this.element.is(':checked');
+			if (typeof this.settings.state === 'undefined') {
+				this.settings.state		= typeof this.element.attr('indeterminate') !== 'undefined'? null : this.element.is(':checked');
 			}
 
 			// If value specified, overwrite with value
-			if (typeof this.options.value !== 'undefined') {
-				state = this._parseValue(this.options.value);
+			if (typeof this.settings.value !== 'undefined') {
+				state = this._parseValue(this.settings.value);
 				if (typeof state !== 'undefined') {
-					this.options.state = state;
+					this.settings.state = state;
 				}
 			}
 
-			this._refresh(this.options.init);
+			this._refresh(this.settings.init);
 
 			return this;
 		},
@@ -85,37 +91,37 @@
 		_refresh: function(callback) {
 			var value	= this.value();
 
-			this.element.data(pluginName, value);
+			this.element.data("vanderlee." + pluginName, value);
 
-			this.element[this.options.state === null ? 'attr' : 'removeAttr']('indeterminate', 'indeterminate');
-			this.element.prop('indeterminate', this.options.state === null);
-			this.element.get(0).indeterminate = this.options.state === null;
+			this.element[this.settings.state === null ? 'attr' : 'removeAttr']('indeterminate', 'indeterminate');
+			this.element.prop('indeterminate', this.settings.state === null);
+			this.element.get(0).indeterminate = this.settings.state === null;
 
-			this.element[this.options.state ? 'attr' : 'removeAttr']('checked', true);
-			this.element.prop('checked', this.options.state === true);
+			this.element[this.settings.state ? 'attr' : 'removeAttr']('checked', true);
+			this.element.prop('checked', this.settings.state === true);
 
 			if ($.isFunction(callback)) {
-				callback.call(this.element, this.options.state, this.value());
+				callback.call(this.element, this.settings.state, this.value());
 			}
 		},
 
 		state: function(value) {
 			if (typeof value === 'undefined') {
-				return this.options.state;
+				return this.settings.state;
 			} else if (value === true || value === false || value === null) {
-				this.options.state = value;
+				this.settings.state = value;
 
-				this._refresh(this.options.change);
+				this._refresh(this.settings.change);
 			}
 			return this;
 		},
 
 		_parseValue: function(value) {
-			if (value === this.options.checked) {
+			if (value === this.settings.checked) {
 				return true;
-			} else if (value === this.options.unchecked) {
+			} else if (value === this.settings.unchecked) {
 				return false;
-			} else if (value === this.options.indeterminate) {
+			} else if (value === this.settings.indeterminate) {
 				return null;
 			}
 		},
@@ -123,44 +129,63 @@
 		value: function(value) {
 			if (typeof value === 'undefined') {
 				var value;
-				switch (this.options.state) {
+				switch (this.settings.state) {
 					case true:
-						value = this.options.checked;
+						value = this.settings.checked;
 						break;
 
 					case false:
-						value = this.options.unchecked;
+						value = this.settings.unchecked;
 						break;
 
 					case null:
-						value = this.options.indeterminate;
+						value = this.settings.indeterminate;
 						break;
 				}
 				return typeof value === 'undefined'? this.element.attr('value') : value;
 			} else {
 				var state = this._parseValue(value);
 				if (typeof state !== 'undefined') {
-					this.options.state = state;
-					this._refresh(this.options.change);
+					this.settings.state = state;
+					this._refresh(this.settings.change);
 				}
 			}
-		}
+		}		
 	});
 
+	$.fn[pluginName] = function (options, value) {	
+		var result = this;
+		
+		this.each(function() {
+            if (!$.data(this, "plugin.vanderlee." + pluginName)) {
+                $.data(this, "plugin.vanderlee." + pluginName, new Plugin(this, options));
+            } else if (typeof options === 'string') {
+				if (typeof value === 'undefined') {
+					result = $(this).data("plugin.vanderlee." + pluginName)[options]();
+					return false;
+				} else {
+					$(this).data("plugin.vanderlee." + pluginName)[options](value);
+				}
+			}
+        });
+
+		return result;
+	};
+	
 	// Overwrite fn.val
     $.fn.val = function(value) {
-        var data = this.data(pluginName);
+        var data = this.data("vanderlee." + pluginName);
         if (typeof data === 'undefined') {
 	        if (typeof value === 'undefined') {
-	            return originalVal.call(this);
+	            return valFunction.call(this);
 			} else {
-				return originalVal.call(this, value);
+				return valFunction.call(this, value);
 			}
 		} else {
 	        if (typeof value === 'undefined') {
 				return data;
 			} else {
-				this.data(pluginName, value);
+				this.data("vanderlee." + pluginName, value);
 				return this;
 			}
 		}
@@ -169,7 +194,7 @@
 	// :indeterminate pseudo selector
     $.expr.filters.indeterminate = function(element) {
 		var $element = $(element);
-		return typeof $element.data(pluginName) !== 'undefined' && $element.prop('indeterminate');
+		return typeof $element.data("vanderlee." + pluginName) !== 'undefined' && $element.prop('indeterminate');
     };
 
 	// :determinate pseudo selector
@@ -179,6 +204,6 @@
 
 	// :tristate selector
     $.expr.filters.tristate = function(element) {
-		return typeof $(element).data(pluginName) !== 'undefined';
+		return typeof $(element).data("vanderlee." + pluginName) !== 'undefined';
     };
-}(jQuery));
+})(jQuery);

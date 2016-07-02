@@ -1,8 +1,8 @@
 jQuery Tristate
 ===============
-Version 1.1.2
+Version 1.2.0
 
-Copyright &copy; 2013-2015 Martijn van der Lee.
+Copyright &copy; 2013-2016 Martijn van der Lee.
 MIT Open Source license applies.
 
 Based on work by Chris Coyier (http://css-tricks.com/indeterminate-checkboxes/)
@@ -26,6 +26,11 @@ Features
 
 Changelog
 -----------
+Version 1.2
+
+-	Dropped jQueryUI requirement.
+-	Minor optimizations.
+
 Version v1.1
 
 -	Fixed memory leak on DOM node removal.
@@ -36,8 +41,6 @@ Version v1.1
 Download
 --------
 jQuery v1.6.2 or higher required. (Will not work with v1.6.1 or before).
-
-jQueryUI v1.8.0 or higher required.
 
 Current version: https://github.com/vanderlee/tristate/archive/master.zip
 
