@@ -1,9 +1,9 @@
 /*jslint devel: true, bitwise: true, regexp: true, browser: true, confusion: true, unparam: true, eqeq: true, white: true, nomen: true, plusplus: true, maxerr: 50, indent: 4 */
-/*globals $, qunit, module, test, ok, equal, expect, start */
+/*globals $, QUnit, module, test, ok, equal, expect, start */
 
-qunit.jqui.module("Tristate");
+QUnit.jqui.module("Tristate");
 
-qunit.jqui.tests({
+QUnit.jqui.tests({
 	"Pseudo selectors": function() {
 		'use strict';
 

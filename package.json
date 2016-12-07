@@ -1,0 +1,32 @@
+{
+	"name": "tristate",
+	"version": "1.2.0",
+	"license": "MIT",
+	"description": "Turn any checkbox into a tristate checkbox. Including .val() extension and pseudo selectors.",
+	"homepage": "https://github.com/vanderlee/tristate",
+	"author": "Martijn van der Lee <martijn@vanderlee.com>",
+	"keywords": [
+		"javascript",
+		"checkbox",
+		"tristate",
+		"boolean",
+		"indeterminate"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vanderlee/tristate.git"
+	},
+	"bugs": {
+		"url": "https://github.com/vanderlee/tristate/issues"
+	},
+	"main": "tristate",
+	"dependencies": {
+		"jquery": ">=1.6.2"
+	},
+	"scripts": {
+		"test": "node --harmony ./test/testrunner.js"
+	},
+	"devDependencies": {
+		"qunit": "*"
+	}
+}
