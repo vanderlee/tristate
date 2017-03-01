@@ -2,9 +2,9 @@
 /*globals jQuery */
 
 /*!
- * Tristate v1.2.0
+ * Tristate v1.2.1
  *
- * Copyright (c) 2013-2016 Martijn W. van der Lee
+ * Copyright (c) 2013-2017 Martijn W. van der Lee
  * Licensed under the MIT.
  */
 /* Based on work by:
@@ -20,13 +20,14 @@
 	
 	var pluginName = 'tristate',
 		defaults = {
-			change:				undefined,
-			checked:			undefined,
-			indeterminate:		undefined,
-			init:				undefined,
-			state:				undefined,
-			unchecked:			undefined,
-			value:				undefined	// one-way only!
+			'change':			undefined,
+			'checked':			undefined,
+			'indeterminate':	undefined,
+			'init':				undefined,
+			'reverse':			false,
+			'state':			undefined,
+			'unchecked':		undefined,
+			'value':			undefined	// one-way only!
 		},
 		valFunction	= $.fn.val;
 
@@ -38,7 +39,7 @@
         }
     }
 
-    $.extend(Plugin.prototype, {	
+    $.extend(Plugin.prototype, {
 		_create: function() {					
 			var that = this,
 				state;
@@ -46,25 +47,14 @@
 			// Fix for #1
 			if (window.navigator.userAgent.indexOf('Trident') >= 0) {
 				this.element.click(function(e) {
-					if (!this.indeterminate && $(this).attr('indeterminate')) {
-						$(this).trigger('change');						
-					}						
+					that._change.call(that, e);			
+					that.element.closest('form').change();
+				});
+			} else {
+				this.element.change(function(e) {
+					that._change.call(that, e);
 				});
 			}
-
-			this.element.change(function(e) {
-				if (e.isTrigger || !e.hasOwnProperty('which')) {
-					e.preventDefault();
-				}
-				
-				switch (that.settings.state) {
-					case true:  that.settings.state = null; break;
-					case false: that.settings.state = true; break;
-					default:    that.settings.state = false; break;
-				}
-
-				that._refresh(that.settings.change);								
-			});
 
 			this.settings.checked		= this.element.attr('checkedvalue')		  || this.settings.checked;
 			this.settings.unchecked		= this.element.attr('uncheckedvalue')	  || this.settings.unchecked;
@@ -88,6 +78,20 @@
 			return this;
 		},
 
+		_change: function(e) {
+			if (e.isTrigger || !e.hasOwnProperty('which')) {
+				e.preventDefault();
+			}
+			
+			switch (this.settings.state) {
+				case true:  this.settings.state = (this.settings.reverse ? false : null); break;
+				case false: this.settings.state = (this.settings.reverse ? null : true); break;
+				default:    this.settings.state = (this.settings.reverse ? true : false); break;
+			}
+
+			this._refresh(this.settings.change);								
+		},
+		
 		_refresh: function(callback) {
 			var value	= this.value();
 
@@ -97,7 +101,7 @@
 			this.element.prop('indeterminate', this.settings.state === null);
 			this.element.get(0).indeterminate = this.settings.state === null;
 
-			this.element[this.settings.state ? 'attr' : 'removeAttr']('checked', true);
+			this.element[this.settings.state === true ? 'attr' : 'removeAttr']('checked', true);
 			this.element.prop('checked', this.settings.state === true);
 
 			if ($.isFunction(callback)) {

@@ -1,8 +1,8 @@
 jQuery Tristate
 ===============
-Version 1.2.0
+Version 1.2.1
 
-Copyright &copy; 2013-2016 Martijn van der Lee.
+Copyright &copy; 2013-2017 Martijn van der Lee.
 MIT Open Source license applies.
 
 Based on work by Chris Coyier (http://css-tricks.com/indeterminate-checkboxes/)
@@ -23,9 +23,15 @@ Features
 	`indeterminatevalue` attributes or options.
 -	HTML attributes modified by the plugin.
 -	Should support every major browser, including IE6.
+-	Configurable order of states.
 
 Changelog
 -----------
+Version 1.2.1
+
+-	Added `reverse` option.
+-	Fixed QUnit testcases.
+
 Version 1.2
 
 -	Dropped jQueryUI requirement.
@@ -48,12 +54,12 @@ Sourcecode on Github: https://github.com/vanderlee/tristate
 
 Browser support
 ---------------
-Tested with v1.0.5
+Tested with v1.2.1
 
--	Chrome 31
--	FireFox 25
--	Opera 17
--	Internet Explorer 10
+-	Chrome 56
+-	FireFox 51
+-	Opera 43
+-	Internet Explorer 11
 
 Quick start
 -----------

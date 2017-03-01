@@ -1,6 +1,6 @@
 {
 	"name": "tristate",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"license": "MIT",
 	"description": "Turn any checkbox into a tristate checkbox. Including .val() extension and pseudo selectors.",
 	"homepage": "https://github.com/vanderlee/tristate",

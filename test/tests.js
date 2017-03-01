@@ -18,22 +18,54 @@ QUnit.jqui.tests({
 		equal(cb.is(':determinate'),	true,	"Initial, Determinate");
 		equal(cb.is(':indeterminate'),	false,	"Initial, Not indeterminate");
 
-		cb.get(0).click();
+		cb.click();	// false -> true
 		equal(cb.is(':checked'),		true,	"1st click, Checked");
 		equal(cb.is(':determinate'),	true,	"1st click, Determinate");
 		equal(cb.is(':indeterminate'),	false,	"1st click, Not indeterminate");
 
-		cb.click();
+		cb.click(); // true -> indeterminate
 		equal(cb.is(':checked'),		false,	"2nd click, Not checked");
 		equal(cb.is(':determinate'),	false,	"2nd click, Not determinate");
 		equal(cb.is(':indeterminate'),	true,	"2nd click, Indeterminate");
 
-		cb.click();
+		cb.click(); // indeterminate -> true
 		equal(cb.is(':checked'),		false,	"3rd click, Not checked");
 		equal(cb.is(':determinate'),	true,	"3rd click, Determinate");
 		equal(cb.is(':indeterminate'),	false,	"3rd click, Not indeterminate");
 	},
-			
+	
+	"Reverse order": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox"/>').appendTo('body');
+		equal(cb.is(':tristate'),		false,	"It's not a tristate");
+
+		cb.tristate({
+			'reverse': true
+		});
+
+		equal(cb.is(':tristate'),		true,	"It's a tristate");
+
+		equal(cb.is(':checked'),		false,	"Initial, Not checked");
+		equal(cb.is(':determinate'),	true,	"Initial, Determinate");
+		equal(cb.is(':indeterminate'),	false,	"Initial, Not indeterminate");
+
+		cb.click(); // false -> indeterminate
+		equal(cb.is(':checked'),		false,	"1st click, Not checked");
+		equal(cb.is(':determinate'),	false,	"1st click, Not determinate");
+		equal(cb.is(':indeterminate'),	true,	"1st click, Indeterminate");
+
+		cb.click(); // indeterminate -> true
+		equal(cb.is(':checked'),		true,	"2nd click, Checked");
+		equal(cb.is(':determinate'),	true,	"2nd click, Determinate");
+		equal(cb.is(':indeterminate'),	false,	"2nd click, Not indeterminate");
+
+		cb.click(); // true -> false
+		equal(cb.is(':checked'),		false,	"3rd click, Not checked");
+		equal(cb.is(':determinate'),	true,	"3rd click, Determinate");
+		equal(cb.is(':indeterminate'),	false,	"3rd click, Not indeterminate");
+	},
+		
 	"Expando values": function() {
 		'use strict';
 
