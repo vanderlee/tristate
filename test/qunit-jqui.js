@@ -11,30 +11,30 @@ QUnit.jqui = {
 
 		testEnvironment = testEnvironment || {};
 
-		var that		= this,
+		var self		= this,
 			setup		= testEnvironment.setup,
 			teardown	= testEnvironment.teardown;
 
-		$ = jQuery = that._QUnit$	= jQuery.noConflict(true);
-		that._iframe				= that._QUnit$('#QUnit-fixture-iframe');
-
-		that._QUnit$(function() {
-			that._iframe.load(function() {
-				that._iframe$	= that._iframe.get(0).contentWindow.jQuery;
+		$ = jQuery = self._QUnit$	= jQuery.noConflict(true);
+		
+		self._QUnit$(function() {
+			self._iframe				= self._QUnit$('#qunit-fixture-iframe');
+			self._iframe.on('load', function() {	
+				self._iframe$	= self._iframe.get(0).contentWindow.jQuery;
 			});
 		});
 
-		that._QUnit$.extend(testEnvironment, {
+		self._QUnit$.extend(testEnvironment, {
 			setup: function() {				
-				$ = jQuery = that._iframe$;
+				$ = jQuery = self._iframe$;
 
-				that._iframe$('body').empty();
+				self._iframe$('body').empty();
 			},
 
 			teardown: function() {
-				that._iframe$('body').empty();
+				self._iframe$('body').empty();
 
-				$ = jQuery = that._QUnit$;
+				$ = jQuery = self._QUnit$;
 			}
 		});
 
@@ -46,11 +46,11 @@ QUnit.jqui = {
 	tests:		function(tests) {
 		'use strict';
 
-		var that = this;
-
-		that._QUnit$(function() {
-			that._iframe.load(function() {
-				that._QUnit$.each(tests, function(name, testCase) {
+		var self = this;
+		
+		self._QUnit$(function() {
+			self._iframe.on('load', function() {
+				self._QUnit$.each(tests, function(name, testCase) {
 					if ($.isFunction(testCase)) {
 						test(name, testCase);
 					} else if ($.isPlainObject(testCase)) {

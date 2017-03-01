@@ -32,7 +32,6 @@ QUnit.jqui.tests({
 		equal(cb.is(':checked'),		false,	"3rd click, Not checked");
 		equal(cb.is(':determinate'),	true,	"3rd click, Determinate");
 		equal(cb.is(':indeterminate'),	false,	"3rd click, Not indeterminate");
-
 	},
 			
 	"Expando values": function() {
