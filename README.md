@@ -23,7 +23,7 @@ Features
 	`indeterminatevalue` attributes or options.
 -	HTML attributes modified by the plugin.
 -	Should support every major browser, including IE6.
--	Configurable order of states.
+-	Configurable order of states via `reverse` option.
 
 Changelog
 -----------
@@ -107,7 +107,7 @@ Turn a normal `checkbox` input into a tristate input.
 
 -	`state`
 
->	`true` for checked, `false` for unchecked or `null` for undeterminate.
+>	`true` for checked, `false` for unchecked or `null` for indeterminate.
 
 -	`value`
 
@@ -128,6 +128,12 @@ Turn a normal `checkbox` input into a tristate input.
 
 >	The value to return for indeterminate state. If not specified, the value in
 	the	`value` attribute is returned.
+
+-	`reverse`
+
+>	If set to true, the state order changes from "Unchecked > Checked > Indeterminate 
+	> Unchecked" to "Unchecked > Indeterminate > Checked > Unchecked". Useful 
+	if e.g. starting state is Indeterminate.
 
 
 ### Events
