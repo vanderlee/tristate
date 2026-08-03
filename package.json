@@ -27,6 +27,6 @@
 		"test": "node --harmony ./test/testrunner.js"
 	},
 	"devDependencies": {
-		"qunit": "*"
+		"qunit": "~0.5.18"
 	}
 }
