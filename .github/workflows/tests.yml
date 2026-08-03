@@ -26,5 +26,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Add QUnit compatibility shim
+        run: |
+          printf '%s\n' \
+            "var util = require('util');" \
+            "util.print = function () { process.stdout.write(Array.prototype.join.call(arguments, '')); };" \
+            > /tmp/qunit-compat.js
+
       - name: Run tests
         run: npm test
+        env:
+          NODE_OPTIONS: --require=/tmp/qunit-compat.js
