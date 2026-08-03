@@ -44,15 +44,18 @@
 			var that = this,
 				state;
 
-			// Fix for #1
-			if (window.navigator.userAgent.indexOf('Trident') >= 0) {
-				this.element.click(function(e) {
-					that._change.call(that, e);			
-					that.element.closest('form').change();
-				});
-			} else {
-				this.element.change(function(e) {
-					that._change.call(that, e);
+			this.element.change(function(e) {
+				that._change.call(that, e);
+			});
+
+			// IE and legacy Edge clear the native indeterminate property before
+			// dispatching change. Re-emit change when leaving that state so both
+			// the plugin and application listeners observe the transition.
+			if (/(Trident|Edge)\//.test(window.navigator.userAgent)) {
+				this.element.click(function() {
+					if (!this.indeterminate && $(this).attr('indeterminate')) {
+						$(this).trigger('change');
+					}
 				});
 			}
 
@@ -128,6 +131,18 @@
 			} else if (value === this.settings.indeterminate) {
 				return null;
 			}
+		},
+
+		getChecked: function() {
+			return typeof this.settings.checked === 'undefined' ? this.element.attr('value') : this.settings.checked;
+		},
+
+		getUnchecked: function() {
+			return typeof this.settings.unchecked === 'undefined' ? this.element.attr('value') : this.settings.unchecked;
+		},
+
+		getIndeterminate: function() {
+			return typeof this.settings.indeterminate === 'undefined' ? this.element.attr('value') : this.settings.indeterminate;
 		},
 
 		value: function(value) {
