@@ -2,6 +2,11 @@ name: Publish to npm
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Package version to publish (for example, 1.2.3)
+        required: true
+        type: string
   release:
     types:
       - published
@@ -26,7 +31,10 @@ jobs:
           package-manager-cache: false
 
       - name: Verify release version
-        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+        env:
+          EXPECTED_VERSION: ${{ github.event.release.tag_name || inputs.version }}
+        run: |
+          node -e "const packageVersion = require('./package.json').version; const releaseVersion = process.env.EXPECTED_VERSION.replace(/^v/, ''); if (packageVersion !== releaseVersion) { console.error('package.json version ' + packageVersion + ' does not match release version ' + releaseVersion); process.exit(1); }"
 
       - name: Install dependencies
         run: npm install
