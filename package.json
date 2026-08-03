@@ -1,6 +1,6 @@
 {
 	"name": "tristate",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"license": "MIT",
 	"description": "Turn any checkbox into a tristate checkbox. Including .val() extension and pseudo selectors.",
 	"homepage": "https://github.com/vanderlee/tristate",
@@ -19,7 +19,13 @@
 	"bugs": {
 		"url": "https://github.com/vanderlee/tristate/issues"
 	},
-	"main": "tristate",
+	"main": "jquery.tristate.js",
+	"files": [
+		"jquery.tristate.js"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"dependencies": {
 		"jquery": ">=1.6.2"
 	},

@@ -52,6 +52,23 @@ Current version: https://github.com/vanderlee/tristate/archive/master.zip
 
 Sourcecode on Github: https://github.com/vanderlee/tristate
 
+Publishing
+----------
+Releases are published to npm by GitHub Actions using npm trusted publishing.
+
+Before publishing for the first time, configure the `tristate` package on npm
+with a GitHub Actions trusted publisher using these values:
+
+- Organization or user: `vanderlee`
+- Repository: `tristate`
+- Workflow filename: `publish.yml`
+- Allowed action: `npm publish`
+
+To publish a new version, update the version in `package.json`, merge the
+change, and publish a GitHub release whose tag matches that version (for
+example, package version `1.2.2` uses tag `v1.2.2`). The workflow verifies the
+tag, runs the test suite, and publishes the package to npm.
+
 Browser support
 ---------------
 Tested with v1.2.1

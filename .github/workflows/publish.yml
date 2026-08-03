@@ -1,0 +1,46 @@
+name: Publish to npm
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Verify release version
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add QUnit compatibility shim
+        run: |
+          printf '%s\n' \
+            "var util = require('util');" \
+            "util.print = function () { process.stdout.write(Array.prototype.join.call(arguments, '')); };" \
+            > /tmp/qunit-compat.js
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_OPTIONS: --require=/tmp/qunit-compat.js
+
+      - name: Publish package
+        run: npm publish
