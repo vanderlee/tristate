@@ -324,6 +324,32 @@ QUnit.jqui.tests({
 		equal(cb.tristate('state'),		false,	"Unchanged");
 	},
 
+	"Public value getters": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox" value="default"/>').appendTo('body');
+		cb.tristate({
+			checked:		'C',
+			unchecked:		'U',
+			indeterminate:	'I'
+		});
+
+		equal(cb.tristate('getChecked'),		'C',	"Checked value");
+		equal(cb.tristate('getUnchecked'),		'U',	"Unchecked value");
+		equal(cb.tristate('getIndeterminate'),	'I',	"Indeterminate value");
+	},
+
+	"Public value getters fall back to the input value": function() {
+		'use strict';
+
+		var cb = $('<input type="checkbox" value="default"/>').appendTo('body');
+		cb.tristate();
+
+		equal(cb.tristate('getChecked'),		'default',	"Checked fallback");
+		equal(cb.tristate('getUnchecked'),		'default',	"Unchecked fallback");
+		equal(cb.tristate('getIndeterminate'),	'default',	"Indeterminate fallback");
+	},
+
 	"Events": {
 		type:	'async',
 		test:	function() {

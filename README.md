@@ -158,6 +158,12 @@ Turn a normal `checkbox` input into a tristate input.
 >	Either get or set the state of the checkbox. Uses `true` for checked,
 	`false` for unchecked or `null` for indeterminate state.
 
+-	`getChecked`, `getUnchecked`, `getIndeterminate`
+
+>	Return the configured value for the corresponding state without changing the
+	current state. If no state-specific value was configured, these methods return
+	the checkbox's normal `value` attribute.
+
 -	`value`
 
 >	Get the current value or set the state by specifying the value.
